@@ -1,0 +1,4 @@
+export type StudyState={user:{name:string;email:string}|null;profile:{name:string;dailyGoal:number};progress:{lesson_id:string;score:number;completed_at:number}[];reviews:{word_id:string;due_at:number;interval_days:number;repetitions:number}[];activity:{lesson_id:string;seconds:number;created_at:number}[];drafts:{lesson_id:string;body:string}[];assessment:null|{listening:number;reading:number;oral:number;writing:number;date:number}};
+export const emptyState:StudyState={user:null,profile:{name:'',dailyGoal:20},progress:[],reviews:[],activity:[],drafts:[],assessment:null};
+export async function sendAction(action:string,data:Record<string,unknown>={}){const r=await fetch('/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});const result=await r.json() as {ok?:boolean;error?:string};if(!r.ok)throw new Error(result.error||'保存失败，请稍后再试。');return result;}
+
