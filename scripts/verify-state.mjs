@@ -1,8 +1,18 @@
 import assert from 'node:assert/strict';
-const origin=process.argv[2] || 'http://127.0.0.1:8787';
+import {Miniflare} from 'miniflare';
+import {readFile,readdir} from 'node:fs/promises';
+import path from 'node:path';
+const origin='http://localhost';
+const moduleFiles=await readdir('dist/server',{recursive:true});
+const modules=['index.js',...moduleFiles.filter(f=>f.endsWith('.js')&&f!=='index.js')].map(f=>({type:'ESModule',path:path.resolve('dist/server',f)}));
+const mf=new Miniflare({modules,modulesRoot:path.resolve('dist/server'),compatibilityDate:'2026-05-15',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'parcours-qa'},cf:false});
+try {
+const database=await mf.getD1Database('DB');
+const migration=await readFile('drizzle/0000_fresh_natasha_romanoff.sql','utf8');
+for(const statement of migration.split('--> statement-breakpoint').map(s=>s.trim()).filter(Boolean))await database.prepare(statement).run();
 const run=crypto.randomUUID();
 const identity=id=>({'oai-authenticated-user-id':'qa-'+run+'-'+id,'oai-authenticated-user-email':'qa-'+id+'@example.test'});
-async function request(id,body,extra={}){const r=await fetch(origin+'/api/state',{method:body?'POST':'GET',headers:{...(id?identity(id):{}),...(body?{'Content-Type':'application/json'}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})});return {status:r.status,data:await r.json()};}
+async function request(id,body,extra={}){const r=await mf.dispatchFetch(origin+'/api/state',{method:body?'POST':'GET',headers:{...(id?identity(id):{}),...(body?{'Content-Type':'application/json'}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})});return {status:r.status,data:await r.json()};}
 assert.equal((await request(null)).data.user,null);
 assert.equal((await request(null,{action:'bookmark',wordId:'lesson-01-word-1'})).status,401);
 assert.equal((await request('a',{action:'bookmark',wordId:'lesson-01-word-1'})).status,200);
@@ -20,3 +30,5 @@ assert.equal((await request('a',{action:'profile',name:'QA',dailyGoal:-5})).stat
 assert.equal((await request('a',{action:'bookmark',wordId:'missing'})).status,404);
 assert.equal((await request('a',{action:'bookmark',wordId:'lesson-01-word-1'},{origin:'https://different.example'})).status,403);
 console.log('PASS: anonymous protection, per-user isolation, completion persistence, idempotent retry, review scheduling, validation, and origin checks. Test records are local only.');
+
+} finally {await mf.dispose();}

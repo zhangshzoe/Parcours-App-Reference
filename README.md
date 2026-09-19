@@ -26,7 +26,7 @@ Use the Node.js and npm versions provided by the environment.
 - npm run build — build Cloudflare-compatible output.
 - npm start — preview the built Worker; use its printed local URL.
 - npm run db:generate — generate schema migrations after db/schema.ts changes.
-- node scripts/verify-state.mjs <built-worker-local-url> — verify storage, retry safety, validation and isolation in the local built Worker. It uses disposable example.test identities and must only target the local Worker.
+- node scripts/verify-state.mjs — verify storage, retry safety, validation and isolation against the built Worker in an isolated Miniflare instance. It uses disposable example.test identities and an ephemeral database; no hosted data is touched.
 
 The portable development preview provides a single local sign-in identity. Production sign-in is owned by Sites. API code trusts only the platform-forwarded identity; clients never choose the owner of a record. Site access policy controls who can open the published app.
 
