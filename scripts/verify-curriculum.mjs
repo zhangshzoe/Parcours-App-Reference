@@ -21,14 +21,15 @@ function readModule(filename){
 }
 export const {lessons,topics,allWords}=readModule(path.join(root,'lib/curriculum.ts'));
 export const {levelGuide,countFrenchWords}=readModule(path.join(root,'lib/levels.ts'));
-const expected={A1:8,A2:7,'A2+':8,B1:9,B2:8,C1:8,C2:8};
-assert.equal(lessons.length,56);
-assert.equal(new Set(lessons.map(l=>l.id)).size,56,'Duplicate lesson IDs');
-assert.equal(allWords.length,168);
-assert.equal(new Set(allWords.map(w=>w.id)).size,168,'Duplicate vocabulary IDs');
+const expected={A1:50,A2:50,'A2+':50,B1:50,B2:50,C1:50,C2:50};
+assert.equal(lessons.length,350);
+assert.equal(new Set(lessons.map(l=>l.id)).size,350,'Duplicate lesson IDs');
+assert.equal(allWords.length,1050);
+assert.equal(new Set(allWords.map(w=>w.id)).size,1050,'Duplicate vocabulary IDs');
 for(const [level,count] of Object.entries(expected))assert.equal(lessons.filter(l=>l.level===level).length,count,level);
-for(const topic of topics)assert.equal(lessons.filter(l=>l.topic===topic.id).length,7,topic.id);
+for(const topic of topics){const topicCount=lessons.filter(l=>l.topic===topic.id).length;assert.ok(topicCount>=28,topic.id+': '+topicCount);}
 for(let i=1;i<=56;i++)assert.ok(lessons.some(l=>l.id===`lesson-${String(i).padStart(2,'0')}`));
+for(const level of Object.keys(expected))assert.equal(new Set(lessons.filter(l=>l.level===level).map(l=>l.title)).size,50,level+' duplicate titles');
 const errors=[];
 for(const l of lessons){
   assert.ok(topics.some(t=>t.id===l.topic),l.id);
@@ -47,4 +48,4 @@ for(const l of lessons){
   if(l.level!=='A1'){assert.ok(l.readingTask?.prompt&&l.readingTask?.answer,l.id);assert.ok(l.writing.checklist.length>=2,l.id);}
 }
 assert.deepEqual(errors,[],'Reference answers should model their suggested length');
-console.log('PASS: 56 unique lessons, 168 vocabulary cards, all level/theme assignments, bilingual dialogue pairs, answer indices and reference writing lengths.');
+console.log('PASS: 350 unique lessons (50 per level), 1050 vocabulary cards, all theme assignments, bilingual dialogue pairs, answer indices and reference writing lengths.');

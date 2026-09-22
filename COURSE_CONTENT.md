@@ -1,11 +1,11 @@
 # Parcours course content
 
-The catalog contains 56 short lessons across eight themes: A1 (8), A2 (7), A2+ (8), B1 (9), B2 (8), C1 (8), C2 (8). A2+ is the application's transition track. These are practice units, not a complete course or an assessment proving mastery of an entire level.
+The catalog contains 350 short lessons across eight themes: 50 lessons each for A1, A2, A2+, B1, B2, C1 and C2. A2+ is the application's transition track. These are practice units, not an assessment proving mastery of an entire level.
 
 The new French dialogues, Chinese explanations, exercises and sample responses are original teaching material. The literary excerpt in lesson-54 is also original. Scenarios and example messages are fictional exercises, not legal, commercial or factual claims about named organizations.
 
 Difficulty framing references the Council of Europe's [CEFR levels](https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions) and [qualitative aspects of spoken language use](https://www.coe.int/en/web/common-european-framework-reference-languages/table-3-cefr-3.3-common-reference-levels-qualitative-aspects-of-spoken-language-use). This is not an official CEFR curriculum, exam or certification. Course levels and advanced sample answers should receive a French teacher's review before high-stakes educational use.
 
-Each new level has one lesson per theme, six bilingual dialogue turns, three vocabulary expressions, a comprehension question, a grammar or discourse question with explanations, a writing task and a reference response. B2–C2 also have a reading interpretation prompt and manual writing reflection checks. Speech uses the learner's device's French speech synthesis voice. Text-length and punctuation checks do not assess proficiency or replace feedback from a teacher.
+The expanded catalog uses a spiral curriculum: learners revisit 46 practical situations with progressively more demanding language and reasoning. Every lesson has six bilingual dialogue turns, three vocabulary expressions, a comprehension question, a grammar or discourse question with explanations, a writing task and a reference response. B2–C2 also have a reading interpretation prompt and manual writing reflection checks. Speech uses the learner's device's French speech synthesis voice. Text-length and punctuation checks do not assess proficiency or replace feedback from a teacher.
 
 Suggested word ranges and minimum completion lengths are defined centrally in `lib/levels.ts`, shared by the interface and server. Existing A2–B1 lesson IDs, vocabulary IDs and completion rules are retained to preserve saved learning records. The six-question assessment remains scoped to A2–B1 and cannot assign advanced proficiency.

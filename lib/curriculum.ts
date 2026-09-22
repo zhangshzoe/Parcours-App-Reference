@@ -2,6 +2,7 @@ import {a1Lessons} from './curriculum-a1';
 import {b2Lessons} from './curriculum-b2';
 import {c1Lessons} from './curriculum-c1';
 import {c2Lessons} from './curriculum-c2';
+import {scaledLessons} from './curriculum-scale';
 export type Word={id:string;fr:string;pos:string;zh:string};
 export type Lesson={id:string;topic:string;level:string;title:string;fr:string;goal:string;minutes:number;dialogue:{speaker:string;fr:string;zh:string}[];words:Word[];grammar:{title:string;explanation:string;example:string;translation:string;question:string;options:string[];answer:number;why:string};quiz:{question:string;options:string[];answer:number;why:string};readingTask?:{prompt:string;answer:string};writing:{prompt:string;example:string;checklist?:string[]}};
 export const topics=[
@@ -2143,6 +2144,8 @@ const originalLessons:Lesson[]=[
     }
   }
 ];
-export const lessons:Lesson[]=[...originalLessons,...a1Lessons,...b2Lessons,...c1Lessons,...c2Lessons];
+const authoredLessons:Lesson[]=[...originalLessons,...a1Lessons,...b2Lessons,...c1Lessons,...c2Lessons];
+const levelOrder=['A1','A2','A2+','B1','B2','C1','C2'];
+export const lessons:Lesson[]=levelOrder.flatMap(level=>[...authoredLessons,...scaledLessons].filter(lesson=>lesson.level===level));
 export const findLesson=(id:string)=>lessons.find(l=>l.id===id);
 export const allWords=lessons.flatMap(l=>l.words.map(w=>({...w,lessonId:l.id,lessonTitle:l.title,example:l.dialogue.find(d=>d.fr.toLowerCase().includes(w.fr.replace(/^(un |une |du |la |le |les )/,'').toLowerCase()))?.fr??''})));
