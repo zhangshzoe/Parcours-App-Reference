@@ -1,10 +1,10 @@
 # Parcours · 法语进阶之路
 
-A responsive Chinese/French learning application for A2–B1 learners.
+A responsive Chinese/French learning application for A1–C2 learners.
 
 ## Included
 
-- 8 themes, 24 original short lessons, 72 vocabulary cards.
+- 7 selectable levels, 8 themes, 350 lessons and 1,050 vocabulary cards.
 - Five-step lessons: listening, reading, vocabulary/grammar, guided speaking, writing.
 - Browser French speech synthesis with sentence replay and slower playback.
 - Microphone recording and local playback; recordings are not uploaded.
@@ -16,7 +16,7 @@ A responsive Chinese/French learning application for A2–B1 learners.
 
 ## Content
 
-Edit lib/curriculum.ts to maintain the course material. The levels are editorial lesson tags, not a formal level certification. The content is an initial original curriculum and has not undergone independent teacher review. Full AI conversation, automatic pronunciation assessment, a teacher authoring console, and native app distribution are not included.
+Edit lib/curriculum.ts and the level-specific curriculum modules to maintain the course material. The levels are editorial lesson tags, not a formal level certification. The content is an original spiral curriculum and has not undergone independent teacher review. Full AI conversation, automatic pronunciation assessment, a teacher authoring console, and native app distribution are not included.
 
 ## Development
 
