@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {Miniflare} from 'miniflare';
 import {readFile,readdir} from 'node:fs/promises';
 import path from 'node:path';
+import {lessons,levelGuide} from './verify-curriculum.mjs';
 const origin='http://localhost';
 const moduleFiles=await readdir('dist/server',{recursive:true});
 const modules=['index.js',...moduleFiles.filter(f=>f.endsWith('.js')&&f!=='index.js')].map(f=>({type:'ESModule',path:path.resolve('dist/server',f)}));
@@ -29,6 +30,20 @@ assert.ok((await request('a')).data.reviews.find(r=>r.word_id==='lesson-01-word-
 assert.equal((await request('a',{action:'profile',name:'QA',dailyGoal:-5})).status,400);
 assert.equal((await request('a',{action:'bookmark',wordId:'missing'})).status,404);
 assert.equal((await request('a',{action:'bookmark',wordId:'lesson-01-word-1'},{origin:'https://different.example'})).status,403);
-console.log('PASS: anonymous protection, per-user isolation, completion persistence, idempotent retry, review scheduling, validation, and origin checks. Test records are local only.');
+for(const level of ['A1','B2','C1','C2']){
+ const lesson=lessons.find(l=>l.level===level);
+ const minimum=levelGuide(level).completionWords;
+ const attempt={action:'complete',lessonId:lesson.id,answers:[lesson.quiz.answer,lesson.grammar.answer],writing:lesson.writing.example,seconds:120,attemptId:crypto.randomUUID()};
+ const insufficient=lesson.writing.example.trim().split(/\s+/).slice(0,minimum-1).join(' ');
+ assert.equal((await request('levels',{...attempt,writing:insufficient})).status,400,level+' rejects under-length writing');
+ assert.equal((await request('levels',{action:'draft',lessonId:lesson.id,writing:insufficient})).status,200,level+' permits unfinished drafts');
+ assert.equal((await request('levels',attempt)).status,200,level+' completes');
+ assert.equal((await request('levels',attempt)).status,200,level+' retry is idempotent');
+}
+const extended=(await request('levels')).data;
+assert.equal(extended.progress.length,4);assert.equal(extended.activity.length,4);assert.equal(extended.reviews.length,12);
+assert.ok(extended.progress.every(p=>p.score===2));
+assert.equal((await request('b')).data.progress.length,0);
+console.log('PASS: existing completion rules and all four new levels; correct scores, minimum lengths, unfinished drafts, saved reviews, per-user isolation and idempotent retries. Test records are local only.');
 
 } finally {await mf.dispose();}

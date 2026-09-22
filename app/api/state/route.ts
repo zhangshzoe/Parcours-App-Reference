@@ -2,6 +2,7 @@ import {getChatGPTUser} from '@/app/chatgpt-auth';
 import {getDatabase} from '@/db';
 import {findLesson,allWords} from '@/lib/curriculum';
 import {emptyState} from '@/lib/study-state';
+import {levelGuide,countFrenchWords} from '@/lib/levels';
 import {z} from 'zod';
 export const dynamic='force-dynamic';
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'private, no-store'}});
@@ -23,7 +24,8 @@ const body=JSON.parse(raw);const action=z.enum(['complete','bookmark','review','
 if(action==='complete'){
  const input=z.object({lessonId:z.string(),answers:z.tuple([z.number().int().min(0).max(2),z.number().int().min(0).max(2)]),writing:z.string().min(15).max(6000),seconds:z.number().int().min(0).max(7200),attemptId:z.string().uuid()}).parse(body);
  const lesson=findLesson(input.lessonId);if(!lesson)return reply({error:'课程不存在。'},404);
- if(input.writing.trim().split(/\s+/).length<8)return reply({error:'请至少写 8 个法语词，完成这一课的写作任务。'},400);
+ const minimum=levelGuide(lesson.level).completionWords;
+ if(countFrenchWords(input.writing)<minimum)return reply({error:`本课请至少写 ${minimum} 个法语词，再完成写作任务。`},400);
  const score=Number(input.answers[0]===lesson.quiz.answer)+Number(input.answers[1]===lesson.grammar.answer);
  await db.batch([
  db.prepare('INSERT INTO lesson_progress (user_id, lesson_id, score, completed_at) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, lesson_id) DO UPDATE SET score = MAX(score, excluded.score)').bind(uid,lesson.id,score,now),
