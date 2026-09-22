@@ -11,7 +11,7 @@ import {Progress} from '@/components/ui/progress';
 import {Switch} from '@/components/ui/switch';
 import {Toaster,toast} from 'sonner';
 import {topics,lessons,allWords,Lesson} from '@/lib/curriculum';
-import {languageOptions,languageGuide,topicName,LearningLanguage} from '@/lib/languages';
+import {languageOptions,languageGuide,topicName,examTrack,examGuide,LearningLanguage} from '@/lib/languages';
 import {levelOptions,levelGuide} from '@/lib/levels';
 import {emptyState,StudyState,sendAction} from '@/lib/study-state';
 import {AudioButton,Recorder,GuidedDialogue,WritingCheck,LessonPlayer,ReadingTask} from './study-tools';
@@ -27,7 +27,7 @@ export default function LearningApp({signInHref,signOutHref}:{signInHref:string;
  const [courseLevel,setCourseLevel]=useState('A1');
  const [language,setLanguage]=useState<LearningLanguage>('fr'),[bilingual,setBilingual]=useState(true);
  const [view,setView]=useState<View>('today'),[selected,setSelected]=useState(lessons[0].id),[practiceMode,setPracticeMode]=useState('listen'),[state,setState]=useState<StudyState>(emptyState),[loading,setLoading]=useState(true),[error,setError]=useState('');
- useEffect(()=>{const timer=window.setTimeout(()=>{const saved=localStorage.getItem('parcours-language');if(saved&&languageOptions.some(item=>item.id===saved))setLanguage(saved as LearningLanguage);const savedBilingual=localStorage.getItem('parcours-bilingual');if(savedBilingual!==null)setBilingual(savedBilingual==='true')},0);return()=>window.clearTimeout(timer)},[]);
+ useEffect(()=>{const timer=window.setTimeout(()=>{const lessonId=new URLSearchParams(location.search).get('lesson'),saved=localStorage.getItem('parcours-language');if(!lessonId&&saved&&languageOptions.some(item=>item.id===saved))setLanguage(saved as LearningLanguage);const savedBilingual=localStorage.getItem('parcours-bilingual');if(savedBilingual!==null)setBilingual(savedBilingual==='true')},0);return()=>window.clearTimeout(timer)},[]);
  const refresh=useCallback(async()=>{try{const r=await fetch('/api/state',{cache:'no-store'});const data=await r.json() as StudyState & {error?:string};if(!r.ok)throw new Error(data.error||'学习记录暂时无法加载。');setState(data);setError('')}catch(e){setError((e as Error).message)}finally{setLoading(false)}},[]);
  useEffect(()=>{void refresh();const p=new URLSearchParams(location.search);const id=p.get('lesson');if(id&&lessons.some(l=>l.id===id)){const found=lessons.find(l=>l.id===id)!;setSelected(id);setCourseLevel(found.level);setLanguage(found.language??'fr');setView('lesson')}else if(nav.some(n=>n.id===p.get('view'))||p.get('view')==='assessment')setView(p.get('view') as View)},[refresh]);
  function changeLanguage(next:LearningLanguage){const nextLessons=lessons.filter(l=>l.language===next);setLanguage(next);setCourseLevel(nextLessons[0]?.level??'A1');setSelected(nextLessons[0]?.id??lessons[0].id);localStorage.setItem('parcours-language',next);if(view==='lesson')setView('courses')}
@@ -47,7 +47,7 @@ export default function LearningApp({signInHref,signOutHref}:{signInHref:string;
  {view==='review'&&<Review state={state} language={language} refresh={refresh} go={go} signInHref={signInHref}/>}
  {view==='profile'&&<Profile state={state} refresh={refresh} go={go} openLesson={openLesson} signInHref={signInHref} signOutHref={signOutHref}/>}
  {view==='assessment'&&<Assessment state={state} refresh={refresh} back={()=>go('today')} openCourses={()=>go('courses')}/>}
- {view==='lesson'&&<LessonPlayer key={current.id} bilingual={bilingual} lesson={current} state={state} refresh={refresh} signInHref={signInHref} back={()=>go('courses')} onNext={()=>{const levelLessons=lessons.filter(l=>l.level===current.level);const i=levelLessons.findIndex(l=>l.id===current.id);if(i<levelLessons.length-1)openLesson(levelLessons[i+1].id);else go('courses')}}/>}
+ {view==='lesson'&&<LessonPlayer key={current.id} bilingual={bilingual} lesson={current} state={state} refresh={refresh} signInHref={signInHref} back={()=>go('courses')} onNext={()=>{const levelLessons=lessons.filter(l=>l.language===current.language&&l.level===current.level);const i=levelLessons.findIndex(l=>l.id===current.id);if(i<levelLessons.length-1)openLesson(levelLessons[i+1].id);else go('courses')}}/>}
  <footer className="workspace-footer"><span>PARCOURS · 每一天，离{languageGuide(language).practiceName}更近一点</span><span>{languageGuide(language).farewell}</span></footer></main></div><Toaster position="top-center" richColors closeButton/></SidebarProvider>
 }
 function Today({state,level,language,bilingual,nextLesson,openLesson,go,startPractice}:{state:StudyState;level:string;language:LearningLanguage;bilingual:boolean;nextLesson:Lesson;openLesson:(id:string)=>void;go:(v:View)=>void;startPractice:(mode:string)=>void}){
@@ -62,12 +62,12 @@ function Courses({state,language,openLesson,onAssess,filter,setFilter}:{state:St
  const count=lessons.filter(matches).length;
  const availableLevels=levelOptions.filter(level=>languageLessons.some(l=>l.level===level.id));
  return <>
-  <div className="page-heading"><div><div className="eyebrow">VOTRE PARCOURS</div><h1>把{meta.label}，放进真实生活。</h1><p>{topics.length} 个主题 · {languageLessons.length} 节课程 · 自由选择适合自己的起点。</p></div></div>
+  <div className="page-heading"><div><div className="eyebrow">VOTRE PARCOURS</div><h1>把{meta.label}，放进真实生活。</h1><p>{topics.length} 个主题 · {languageLessons.length} 节课程 · {examTrack(language).name}。</p></div></div>
   <div className="course-toolbar">
    <Tabs value={filter} onValueChange={setFilter} className="level-tabs"><TabsList aria-label="选择课程等级">{availableLevels.map(level=><TabsTrigger key={level.id} value={level.id}>{level.label}</TabsTrigger>)}</TabsList></Tabs>
    <div className="search-field"><Search size={17}/><Input placeholder={'搜索主题或'+meta.practiceName+'表达'} value={search} onChange={e=>setSearch(e.target.value)} aria-label="搜索课程"/></div>
   </div>
-  <div className="level-summary" aria-live="polite"><strong>{levelGuide(filter).label} · {count} 节课程</strong><p>{levelGuide(filter).description}</p><small>写作建议 {levelGuide(filter).minWords}–{levelGuide(filter).maxWords} 词 · {levelGuide(filter).speaking}</small></div>
+  <div className="level-summary" aria-live="polite"><div className="level-summary-title"><strong>{levelGuide(filter).label} · {count} 节课程</strong><span className="exam-badge">{examGuide(language,filter).label}</span></div><p>{examGuide(language,filter).focus}。{levelGuide(filter).description}</p><small>写作建议 {levelGuide(filter).minWords}–{levelGuide(filter).maxWords} 词 · {levelGuide(filter).speaking}</small><small className="exam-note">课程参考考试能力要求设计，不等同于官方备考课程或等级认证；A2+ 为应用内衔接级。</small></div>
   {language==='fr'&&<button className="assessment-link" onClick={onAssess}><GraduationCap size={17}/>检查 A2–B1 听读基础 <ArrowRight size={15}/></button>}
   {count===0&&<div className="empty-state panel"><Search/><h2>没有找到相关课程</h2><p>试试“旅行”“咖啡”或换一个难度。</p><Button variant="outline" onClick={()=>setSearch('')}>清除搜索</Button></div>}
   <div className="topic-grid">{topics.filter(t=>lessons.some(l=>l.topic===t.id&&matches(l))).map(t=>{const Icon=topicIcons[t.icon];return <section className="topic-card panel" key={t.id}><div className="topic-heading"><span className={'icon-block '+t.color}><Icon size={24}/></span><span className="unit-label">UNITÉ {String(topics.indexOf(t)+1).padStart(2,'0')}</span></div><h2>{t.title}</h2><p className="topic-fr" lang={language}>{topicName(t.id,language)}</p><p className="topic-description">{t.desc}</p><div className="topic-lessons">{levelOptions.flatMap(level=>languageLessons.filter(l=>l.level===level.id&&l.topic===t.id&&matches(l))).map(l=>{const done=state.progress.some(p=>p.lesson_id===l.id);return <button key={l.id} onClick={()=>openLesson(l.id)} className="course-lesson"><span className={'lesson-dot '+(done?'completed':'')}>{done?<Check size={13}/>:<ArrowRight size={13}/>}</span><span>{l.title}<small>{l.level} · {l.minutes} 分钟</small></span><ArrowUpRight size={16}/></button>})}</div></section>})}</div>

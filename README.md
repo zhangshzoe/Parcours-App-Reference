@@ -5,8 +5,9 @@ A responsive Chinese learning application for French, English and German.
 ## Included
 
 - Three switchable language modules with a persistent Chinese bilingual mode.
-- French: seven selectable levels and 350 lessons; English and German: 50 A1 starter lessons each.
-- 450 lessons and 1,350 vocabulary cards across eight practical themes.
+- French, English and German each provide seven selectable routes—A1, A2, A2+, B1, B2, C1 and C2—with 50 lessons per route.
+- 1,050 lessons and 3,150 vocabulary cards across eight practical themes.
+- German route labels reference Goethe-Zertifikat; English route labels reference Cambridge English Qualifications. A2+ is an internal transition route rather than an official exam level.
 - Five-step lessons: listening, reading, vocabulary/grammar, guided speaking, writing.
 - Browser speech synthesis selects French, English or German voices automatically.
 - Microphone recording and local playback; recordings are not uploaded.
@@ -18,7 +19,7 @@ A responsive Chinese learning application for French, English and German.
 
 ## Content
 
-Edit lib/curriculum.ts and the level-specific curriculum modules to maintain the course material. The levels are editorial lesson tags, not a formal level certification. The content is an original spiral curriculum and has not undergone independent teacher review. Full AI conversation, automatic pronunciation assessment, a teacher authoring console, and native app distribution are not included.
+Edit lib/curriculum.ts and the level-specific curriculum modules to maintain the course material. The levels are editorial lesson tags informed by CEFR and selected exam skill descriptions, not official exam preparation or formal certification. The content is an original spiral curriculum and has not undergone independent teacher review. Full AI conversation, automatic pronunciation assessment, a teacher authoring console, and native app distribution are not included.
 
 ## Development
 
