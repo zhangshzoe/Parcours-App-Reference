@@ -1,18 +1,20 @@
-# Parcours · 法语进阶之路
+# Parcours · 多语言学习之路
 
-A responsive Chinese/French learning application for A1–C2 learners.
+A responsive Chinese learning application for French, English and German.
 
 ## Included
 
-- 7 selectable levels, 8 themes, 350 lessons and 1,050 vocabulary cards.
+- Three switchable language modules with a persistent Chinese bilingual mode.
+- French: seven selectable levels and 350 lessons; English and German: 50 A1 starter lessons each.
+- 450 lessons and 1,350 vocabulary cards across eight practical themes.
 - Five-step lessons: listening, reading, vocabulary/grammar, guided speaking, writing.
-- Browser French speech synthesis with sentence replay and slower playback.
+- Browser speech synthesis selects French, English or German voices automatically.
 - Microphone recording and local playback; recordings are not uploaded.
 - Guided role-play scripts and transparent writing self-checks, not AI grading.
 - A short listening/reading diagnostic plus optional speaking/writing self-assessment.
 - ChatGPT sign-in and user-owned D1 progress, writing drafts, preferences, assessment results, vocabulary, and spaced review scheduling.
 - Responsive navigation, accessible form primitives, content correction submissions.
-- WebMCP: get_french_learning_catalog and start_french_lesson.
+- WebMCP catalog and lesson-launch tools for all three language modules.
 
 ## Content
 
