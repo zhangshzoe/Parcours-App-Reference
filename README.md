@@ -5,9 +5,10 @@ A responsive Chinese learning application for French, English, German and Japane
 ## Included
 
 - Four switchable language modules with a persistent Chinese bilingual mode.
-- French, English and German each provide seven selectable routes—A1, A2, A2+, B1, B2, C1 and C2—with 50 lessons per route.
-- Japanese provides four routes from zero foundation to JLPT N4, N3, N2 and N1, with 50 lessons per route.
-- 1,250 lessons and 3,750 vocabulary cards across eight practical themes.
+- French, English and German each provide seven selectable routes—A1, A2, A2+, B1, B2, C1 and C2—with 100 lessons per route.
+- Japanese provides four routes from zero foundation to JLPT N4, N3, N2 and N1, with 100 lessons per route.
+- 2,500 lessons and 7,500 vocabulary cards across eight practical themes.
+- Each route has 50 core lessons, 30 transfer lessons, 15 integrated tasks and five next-level readiness checks. Completing a route and its checks supports a progression recommendation; it does not award or guarantee formal proficiency.
 - German route labels reference Goethe-Zertifikat; English route labels reference Cambridge English Qualifications. A2+ is an internal transition route rather than an official exam level.
 - English knowledge progression also draws on the staged teaching approach associated with New Concept English: foundations, everyday grammar, connected narrative, close reading, argument, register and stylistic precision. All passages, examples and exercises in this app are original.
 - Japanese route labels reference the official JLPT competence descriptions. The app adds speaking and writing practice beyond the JLPT test sections; it is not an official preparation course or certification.
@@ -18,7 +19,7 @@ A responsive Chinese learning application for French, English, German and Japane
 - A short listening/reading diagnostic plus optional speaking/writing self-assessment.
 - ChatGPT sign-in and user-owned D1 progress, writing drafts, preferences, assessment results, vocabulary, and spaced review scheduling.
 - Responsive navigation, accessible form primitives, content correction submissions.
-- WebMCP catalog and lesson-launch tools for all three language modules.
+- WebMCP catalog and lesson-launch tools for all four language modules.
 
 ## Content
 

@@ -26,6 +26,17 @@ const examTracks:Record<LearningLanguage,{name:string;levels:Record<string,{labe
 export const examTrack=(language:LearningLanguage)=>examTracks[language];
 export const examGuide=(language:LearningLanguage,level:string)=>examTracks[language].levels[level]??{label:`CEFR ${level}`,focus:'围绕该等级的综合语言能力进行练习'};
 
+const nextRoutes:Record<string,string>={A1:'A2',A2:'A2+','A2+':'B1',B1:'B2',B2:'C1',C1:'C2',C2:'高阶精研',N4:'N3',N3:'N2',N2:'N1',N1:'高级真实语料'};
+export const progressionGuide=(level:string)=>({
+ next:nextRoutes[level]??'下一等级',
+ phases:[
+  {range:'1–50',label:'核心课程',focus:'建立本等级的词汇、句型和生活场景能力'},
+  {range:'51–80',label:'场景迁移',focus:'在变化的条件下重新组织已学表达'},
+  {range:'81–95',label:'综合任务',focus:'整合听读信息，完成口语与写作输出'},
+  {range:'96–100',label:'升阶检查',focus:'独立完成接近下一等级要求的任务'},
+ ],
+});
+
 export type EnglishStage={stage:string;reference:string;knowledge:string[]};
 const englishStages:Record<string,EnglishStage>={
  A1:{stage:'基础起步',reference:'参考《新概念英语》第一册式基础训练',knowledge:['be 与人称代词','冠词、名词与复数','一般现在时','疑问句与否定句','there be 与方位','时间、数字与祈使句']},
