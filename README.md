@@ -8,6 +8,7 @@ A responsive Chinese learning application for French, English and German.
 - French, English and German each provide seven selectable routes—A1, A2, A2+, B1, B2, C1 and C2—with 50 lessons per route.
 - 1,050 lessons and 3,150 vocabulary cards across eight practical themes.
 - German route labels reference Goethe-Zertifikat; English route labels reference Cambridge English Qualifications. A2+ is an internal transition route rather than an official exam level.
+- English knowledge progression also draws on the staged teaching approach associated with New Concept English: foundations, everyday grammar, connected narrative, close reading, argument, register and stylistic precision. All passages, examples and exercises in this app are original.
 - Five-step lessons: listening, reading, vocabulary/grammar, guided speaking, writing.
 - Browser speech synthesis selects French, English or German voices automatically.
 - Microphone recording and local playback; recordings are not uploaded.

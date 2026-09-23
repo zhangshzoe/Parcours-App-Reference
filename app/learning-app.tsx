@@ -11,7 +11,7 @@ import {Progress} from '@/components/ui/progress';
 import {Switch} from '@/components/ui/switch';
 import {Toaster,toast} from 'sonner';
 import {topics,lessons,allWords,Lesson} from '@/lib/curriculum';
-import {languageOptions,languageGuide,topicName,examTrack,examGuide,LearningLanguage} from '@/lib/languages';
+import {languageOptions,languageGuide,topicName,examTrack,examGuide,englishStageGuide,LearningLanguage} from '@/lib/languages';
 import {levelOptions,levelGuide} from '@/lib/levels';
 import {emptyState,StudyState,sendAction} from '@/lib/study-state';
 import {AudioButton,Recorder,GuidedDialogue,WritingCheck,LessonPlayer,ReadingTask} from './study-tools';
@@ -58,6 +58,7 @@ function Today({state,level,language,bilingual,nextLesson,openLesson,go,startPra
 }
 function Courses({state,language,openLesson,onAssess,filter,setFilter}:{state:StudyState;language:LearningLanguage;openLesson:(id:string)=>void;onAssess:()=>void;filter:string;setFilter:(level:string)=>void}){
  const [search,setSearch]=useState(''),meta=languageGuide(language),languageLessons=lessons.filter(l=>l.language===language);
+ const englishStage=englishStageGuide(filter);
  const matches=(l:Lesson)=>l.language===language&&l.level===filter&&(!search||[l.title,l.fr,l.goal,...l.words.map(w=>w.fr)].join(' ').toLowerCase().includes(search.trim().toLowerCase()));
  const count=lessons.filter(matches).length;
  const availableLevels=levelOptions.filter(level=>languageLessons.some(l=>l.level===level.id));
@@ -67,7 +68,7 @@ function Courses({state,language,openLesson,onAssess,filter,setFilter}:{state:St
    <Tabs value={filter} onValueChange={setFilter} className="level-tabs"><TabsList aria-label="选择课程等级">{availableLevels.map(level=><TabsTrigger key={level.id} value={level.id}>{level.label}</TabsTrigger>)}</TabsList></Tabs>
    <div className="search-field"><Search size={17}/><Input placeholder={'搜索主题或'+meta.practiceName+'表达'} value={search} onChange={e=>setSearch(e.target.value)} aria-label="搜索课程"/></div>
   </div>
-  <div className="level-summary" aria-live="polite"><div className="level-summary-title"><strong>{levelGuide(filter).label} · {count} 节课程</strong><span className="exam-badge">{examGuide(language,filter).label}</span></div><p>{examGuide(language,filter).focus}。{levelGuide(filter).description}</p><small>写作建议 {levelGuide(filter).minWords}–{levelGuide(filter).maxWords} 词 · {levelGuide(filter).speaking}</small><small className="exam-note">课程参考考试能力要求设计，不等同于官方备考课程或等级认证；A2+ 为应用内衔接级。</small></div>
+  <div className="level-summary" aria-live="polite"><div className="level-summary-title"><strong>{levelGuide(filter).label} · {count} 节课程</strong><span className="exam-badge">{examGuide(language,filter).label}</span></div><p>{examGuide(language,filter).focus}。{levelGuide(filter).description}</p>{language==='en'&&<div className="knowledge-map"><div><strong>{englishStage.stage}</strong><span>{englishStage.reference}</span></div><div className="knowledge-chips">{englishStage.knowledge.map(item=><span key={item}>{item}</span>)}</div></div>}<small>写作建议 {levelGuide(filter).minWords}–{levelGuide(filter).maxWords} 词 · {levelGuide(filter).speaking}</small><small className="exam-note">{language==='en'?'知识组织借鉴《新概念英语》的递进思路，内容与例句均为原创；Cambridge 标签用于能力参照，并非教材或考试的官方等级对应。':'课程参考考试能力要求设计，不等同于官方备考课程或等级认证；A2+ 为应用内衔接级。'}</small></div>
   {language==='fr'&&<button className="assessment-link" onClick={onAssess}><GraduationCap size={17}/>检查 A2–B1 听读基础 <ArrowRight size={15}/></button>}
   {count===0&&<div className="empty-state panel"><Search/><h2>没有找到相关课程</h2><p>试试“旅行”“咖啡”或换一个难度。</p><Button variant="outline" onClick={()=>setSearch('')}>清除搜索</Button></div>}
   <div className="topic-grid">{topics.filter(t=>lessons.some(l=>l.topic===t.id&&matches(l))).map(t=>{const Icon=topicIcons[t.icon];return <section className="topic-card panel" key={t.id}><div className="topic-heading"><span className={'icon-block '+t.color}><Icon size={24}/></span><span className="unit-label">UNITÉ {String(topics.indexOf(t)+1).padStart(2,'0')}</span></div><h2>{t.title}</h2><p className="topic-fr" lang={language}>{topicName(t.id,language)}</p><p className="topic-description">{t.desc}</p><div className="topic-lessons">{levelOptions.flatMap(level=>languageLessons.filter(l=>l.level===level.id&&l.topic===t.id&&matches(l))).map(l=>{const done=state.progress.some(p=>p.lesson_id===l.id);return <button key={l.id} onClick={()=>openLesson(l.id)} className="course-lesson"><span className={'lesson-dot '+(done?'completed':'')}>{done?<Check size={13}/>:<ArrowRight size={13}/>}</span><span>{l.title}<small>{l.level} · {l.minutes} 分钟</small></span><ArrowUpRight size={16}/></button>})}</div></section>})}</div>

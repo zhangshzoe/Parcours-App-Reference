@@ -30,6 +30,7 @@ for(const language of ['fr','en','de'])for(const [level,count] of Object.entries
 for(const topic of topics){const topicCount=lessons.filter(l=>l.topic===topic.id).length;assert.ok(topicCount>=28,topic.id+': '+topicCount);}
 for(let i=1;i<=56;i++)assert.ok(lessons.some(l=>l.id===`lesson-${String(i).padStart(2,'0')}`));
 for(const language of ['fr','en','de'])for(const level of Object.keys(expected))assert.equal(new Set(lessons.filter(l=>l.language===language&&l.level===level).map(l=>l.title)).size,50,language+' '+level+' duplicate titles');
+for(const level of Object.keys(expected))assert.ok(new Set(lessons.filter(l=>l.language==='en'&&l.level===level).map(l=>l.grammar.title)).size>=6,'English '+level+' needs a varied knowledge sequence');
 const errors=[];
 for(const l of lessons){
   assert.ok(topics.some(t=>t.id===l.topic),l.id);

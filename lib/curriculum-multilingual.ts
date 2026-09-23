@@ -125,17 +125,70 @@ const partnerQuestionZh:Record<CourseLevel,string>={
 };
 const targetTranslation=(level:CourseLevel,base:string)=>level==='A1'?base:level==='A2'?`${base}我已经核对了基本信息，但还需要确认几个细节。`:level==='A2+'?`${base}我想先确认细节，然后再决定下一步。`:level==='B1'?`${base}我希望说明情况、比较选择，并商定一个切实可行的下一步。`:level==='B2'?`${base}为了更有效地沟通，我还会说明背景、比较相关选择，并解释自己倾向某种方案的理由。`:level==='C1'?`${base}完整的回应还应区分已知事实与假设，考虑长期影响，并把论证过程明确说出来。`:`${base}这句初步表达虽然有用，但更准确的回应还应考虑不同解读、根据听众调整语气，并适当限定结论。`;
 
-const grammarGuide:Record<LearningLanguage,Record<CourseLevel,Lesson['grammar']>>={
+const englishGrammar=(title:string,explanation:string,example:string,translation:string,wrong1:string,wrong2:string):Lesson['grammar']=>({
+ title,explanation,example,translation,question:`选择最符合“${title}”的表达。`,options:[example,wrong1,wrong2],answer:0,why:`“${example}”结构完整，准确体现了本课的知识点。`,
+});
+const englishKnowledgeGuide:Record<CourseLevel,Lesson['grammar'][]>= {
+ A1:[
+  englishGrammar('be 动词与人称代词','用 am、is、are 介绍人物、身份和状态。','I am new here.','我是新来的。','I is new here.','I be new here.'),
+  englishGrammar('a、an、the 与名词','第一次提到单数可数名词时常用 a 或 an，明确所指时用 the。','I need a ticket.','我需要一张票。','I need ticket a.','I need an ticket.'),
+  englishGrammar('一般现在时','一般现在时表达习惯、事实和固定安排；第三人称单数需注意词尾。','She works near the station.','她在车站附近工作。','She work near the station.','She working near station.'),
+  englishGrammar('基础疑问句与否定句','用 do、does 或 be 动词构成常用疑问句和否定句。','Do you live nearby?','你住在附近吗？','You do live nearby?','Does you live nearby?'),
+  englishGrammar('there is / there are','用 there is 和 there are 表示某处存在某人或某物。','There are two cafés on this street.','这条街上有两家咖啡馆。','There is two cafés on this street.','There two cafés are on this street.'),
+  englishGrammar('时间、数字与祈使句','用准确的时间、数字和简短祈使句完成基础指令。','Please arrive at nine o’clock.','请九点到达。','Please arriving at nine o’clock.','Arrives at nine please.'),
+ ],
+ A2:[
+  englishGrammar('现在进行时','用 be + -ing 描述正在发生或已安排的近期活动。','I am waiting for the bus.','我正在等公交车。','I waiting for the bus.','I am wait for the bus.'),
+  englishGrammar('一般过去时','用过去式讲述已经完成并有明确过去时间的事件。','We visited the museum yesterday.','我们昨天参观了博物馆。','We visit the museum yesterday.','We have visit the museum yesterday.'),
+  englishGrammar('will 与 be going to','will 常用于即时决定或预测，be going to 常用于已有计划。','I am going to call them this afternoon.','我打算今天下午给他们打电话。','I going call them this afternoon.','I am go to call them this afternoon.'),
+  englishGrammar('可数与不可数名词','注意 much、many、some 以及量词与不同名词的搭配。','How much information do we need?','我们需要多少信息？','How many information do we need?','How much informations do we need?'),
+  englishGrammar('比较级与最高级','比较两者用比较级，比较三者或以上通常用最高级。','This route is shorter than the other one.','这条路线比另一条短。','This route is more short than the other one.','This route shorter that the other one.'),
+  englishGrammar('情态动词与日常功能表达','用 can、could、should 等表达能力、请求或建议。','Could I change my appointment?','我可以更改预约吗？','Could I changed my appointment?','I could to change my appointment?'),
+ ],
+ 'A2+':[
+  englishGrammar('现在完成时','用 have/has + 过去分词连接过去的动作和现在的结果。','I have checked the information.','我已经核对了信息。','I has checked the information.','I have check the information.'),
+  englishGrammar('过去进行时','用 was/were + -ing 描述过去某个时刻正在进行的动作。','I was waiting when you called.','你打来电话时我正在等。','I waited when you were call.','I was wait when you called.'),
+  englishGrammar('过去时与现在完成时对比','有明确过去时间时常用过去时，强调当前经验或结果时用现在完成时。','I visited Berlin last year, but I have never visited Vienna.','我去年去过柏林，但从未去过维也纳。','I have visited Berlin last year.','I visited never Vienna.'),
+  englishGrammar('顺序与因果连接','用 first、then、because、so 等连接步骤和原因。','First we check the facts; then we decide.','我们先核对事实，然后作决定。','First we checking, because decide.','Then first we have decide.'),
+  englishGrammar('动名词与不定式入门','不同动词后接 -ing 或 to + 动词原形，需要按搭配使用。','I decided to take the earlier train.','我决定乘较早的那班火车。','I decided taking the earlier train.','I decide to took the earlier train.'),
+  englishGrammar('关系从句入门','用 who、which、that 补充说明人物或事物。','The colleague who called me was very helpful.','给我打电话的同事很热心。','The colleague which called me was helpful.','The colleague who call me were helpful.'),
+ ],
+ B1:[
+  englishGrammar('叙事中的时态对比','用一般过去时推进事件，用过去进行时交代背景。','I was walking home when it started to rain.','我走路回家时开始下雨了。','I walked home when it was start to rain.','I was walked home when it rained.'),
+  englishGrammar('被动语态','用 be + 过去分词突出动作或结果，而非执行者。','The meeting was moved to Friday.','会议被改到了周五。','The meeting moved to Friday.','The meeting was move to Friday.'),
+  englishGrammar('间接引语','转述别人的话时需调整人称、时态和时间表达。','She said that she needed more time.','她说她需要更多时间。','She said that I needs more time.','She said she need more time yesterday.'),
+  englishGrammar('第一与第二条件句','第一条件句谈现实可能，第二条件句谈假设情况。','If we left earlier, we could avoid the traffic.','如果早点出发，我们或许能避开拥堵。','If we would leave earlier, we avoided traffic.','If we leave earlier yesterday, we could avoided traffic.'),
+  englishGrammar('限定性关系从句','关系从句限定所指人物、地点或事物，使信息更准确。','I chose the option that offered more flexibility.','我选择了更灵活的方案。','I chose the option who offered flexibility.','I chose the option that offer more flexible.'),
+  englishGrammar('情态推测与短语动词','用 might、must、can’t 表达推测，并在语境中掌握常用短语动词。','They might have run out of tickets.','他们可能已经没有票了。','They might ran out of tickets.','They must to run out tickets.'),
+ ],
+ B2:[
+  englishGrammar('复杂条件句','灵活组合条件和结果，讨论过去与现在之间的影响。','If we had booked earlier, we would have paid less.','如果早点预订，我们本会少花些钱。','If we booked earlier, we would have paid yesterday.','If we had book earlier, we will pay less.'),
+  englishGrammar('非谓语与分词结构','用分词或不定式压缩从句，使表达更紧凑。','Having reviewed the evidence, we changed our plan.','审阅证据后，我们改变了计划。','Having review the evidence, we changed plan.','Reviewed having evidence, we change the plan.'),
+  englishGrammar('高级被动结构','用被动报告结构保持客观、正式的语气。','The proposal is expected to reduce delays.','预计该提议会减少延误。','The proposal expects to reduce delays.','The proposal is expect reducing delays.'),
+  englishGrammar('衔接、转述与限定','用 however、whereas、according to 等组织来源和观点。','The first option is faster, whereas the second is more reliable.','第一个方案更快，而第二个更可靠。','The first option faster, whereas second reliable.','Whereas the first option is fastest because second.'),
+  englishGrammar('搭配与精准改写','选择自然搭配，并用同义结构重述原意。','We need to reach a balanced decision.','我们需要作出一个平衡的决定。','We need to do a balanced decision.','We need to arrive a decision balanced.'),
+  englishGrammar('让步与结构化论证','先承认另一观点，再用证据说明自己的判断。','Although speed matters, accuracy should remain our priority.','虽然速度重要，准确性仍应优先。','Although speed matters, but accuracy is priority.','Despite speed matters, accuracy priority.'),
+ ],
+ C1:[
+  englishGrammar('倒装与强调结构','用倒装、cleft sentence 或 what-clause 突出论证焦点。','What matters most is whether the evidence is reliable.','最重要的是证据是否可靠。','What most matters whether evidence reliable.','It matters most is the evidence reliable.'),
+  englishGrammar('名词化','把动作转化为名词，使正式分析更紧凑、客观。','A careful evaluation of the risks is essential.','对风险进行仔细评估至关重要。','Carefully evaluate of risks is essential.','An evaluate careful the risks is essential.'),
+  englishGrammar('复杂名词短语','在中心名词前后加入限定信息，精确压缩复杂概念。','The recently revised long-term funding plan needs review.','最近修订的长期资金计划需要审查。','The revised recently plan funding long-term needs review.','The plan recently long funding revised need review.'),
+  englishGrammar('正式与非正式语体','根据听众和场景调整词汇、句式与礼貌程度。','We would appreciate further clarification of the criteria.','如能进一步说明这些标准，我们将不胜感激。','We want you explain those criteria more.','Clarify the criteria to us now.'),
+  englishGrammar('立场与限定表达','用 appears、suggests、to some extent 等避免无依据的绝对判断。','The evidence suggests that the policy was partly effective.','证据表明这项政策在一定程度上有效。','The evidence proves the policy always works.','The evidence suggest policy was effect.'),
+  englishGrammar('概括、综合与篇章衔接','整合多个来源的共同点和差异，形成连贯结论。','Taken together, these findings support a cautious revision.','综合来看，这些发现支持谨慎修订。','Taking together, these finding supports revise cautious.','Together taken, the findings supports a caution revision.'),
+ ],
+ C2:[
+  englishGrammar('含蓄、歧义与言外之意','辨别字面意义之外的暗示，并在改写时消除不必要的歧义。','Her response was measured rather than enthusiastic.','她的回应很克制，并不热烈。','Her response measured instead enthusiastic.','She response was measure not enthusiasm.'),
+  englishGrammar('语义色彩与高级搭配','区分近义词的语气、搭配和隐含评价。','The decision was pragmatic, though hardly visionary.','这个决定很务实，但谈不上有远见。','The decision was practicality, though not vision.','The decision did pragmatic but hardly visionary.'),
+  englishGrammar('修辞、隐喻与论证效果','分析形象表达如何影响读者对论点的理解。','The proposal offers a bridge, not a final destination.','这项提议提供了一座桥梁，而非最终目的地。','The proposal offer a bridge, no final destination.','The proposal is bridging not destination final.'),
+  englishGrammar('反讽与语用推断','结合语境、语气和共同知识判断说话人的真实意图。','Calling the three-hour delay “minor” was clearly ironic.','把三小时的延误称为“小问题”显然是反讽。','Calling the delay minor clearly irony.','To call delay minor was clear ironically.'),
+  englishGrammar('语体切换与受众适配','保持核心事实不变，同时为不同听众调整密度、措辞和语气。','For a public audience, the conclusion should be stated more plainly.','面对公众听众，结论应表达得更直白。','For public audience, conclusion should stating plain.','To a public, conclusion more plainly state.'),
+  englishGrammar('批判阅读与精准改写','识别前提、证据和修辞框架，再以更审慎的语言重构结论。','The claim is plausible, provided that its underlying assumptions hold.','如果其基础假设成立，这一说法是合理的。','The claim plausible, provide its assumptions holds.','The claim is plausibly if assumptions holding.'),
+ ],
+};
+
+const grammarGuide:Record<Exclude<LearningLanguage,'en'>,Record<CourseLevel,Lesson['grammar']>>={
  fr:{} as Record<CourseLevel,Lesson['grammar']>,
- en:{
-  A1:{title:'用 could 礼貌提出请求',explanation:'Could you…? 比直接使用命令更礼貌，适合向陌生人或服务人员请求帮助。',example:'Could you explain the next step?',translation:'您可以说明下一步吗？',question:'选择更礼貌的请求。',options:['Explain it.','Could you explain it, please?','You explain.'],answer:1,why:'Could you…? 加 please 构成自然、礼貌的请求。'},
-  A2:{title:'用现在完成时说明已完成的事',explanation:'have/has + 过去分词连接过去的动作和现在的结果。',example:'I have checked the information.',translation:'我已经核对了信息。',question:'选择正确的现在完成时。',options:['I have checked the details.','I has check the details.','I checking the details.'],answer:0,why:'主语 I 后使用 have，check 的过去分词是 checked。'},
-  'A2+':{title:'用 first、then、finally 组织顺序',explanation:'顺序连接词能把多个短句组织成清楚的过程。',example:'First we check the facts; then we decide.',translation:'我们先核对事实，然后作决定。',question:'选择顺序最清楚的表达。',options:['First we check; then we decide.','We first because decide.','Then first we checking.'],answer:0,why:'first 和 then 清楚标示了先后顺序。'},
-  B1:{title:'用 because 与 although 展开理由',explanation:'because 引出原因，although 引出让步，可让观点更完整。',example:'I prefer this option because it is practical, although it may cost more.',translation:'我更倾向这个方案，因为它实际，尽管可能更贵。',question:'选择同时包含理由和让步的句子。',options:['I agree and option.','I prefer it because it is practical, although it costs more.','Although because I practical.'],answer:1,why:'because 给出原因，although 补充让步信息。'},
-  B2:{title:'用虚拟条件句协商方案',explanation:'If + 过去式，would/could + 动词原形可用于审慎讨论假设方案。',example:'If we compared both options, we could reach a fairer decision.',translation:'如果比较两个方案，我们可以作出更公平的决定。',question:'选择正确的假设条件句。',options:['If we compare yesterday, we could decided.','If we compared both options, we could decide fairly.','If we would compared, we decide.'],answer:1,why:'假设条件使用 if + 过去式，主句使用 could + 动词原形。'},
-  C1:{title:'用强调结构突出论点',explanation:'What matters is… 能突出论证核心，并把复杂信息组织成清晰焦点。',example:'What matters most is that we make our assumptions explicit.',translation:'最重要的是把我们的假设明确说出来。',question:'选择自然的强调结构。',options:['What matters most is that the evidence is reliable.','What most matter that evidence reliable.','It matters what is most evidence.'],answer:0,why:'What matters most is that… 是完整自然的强调结构。'},
-  C2:{title:'用让步副词精确限定立场',explanation:'Granted 与 nevertheless 先承认对方合理之处，再明确保留或反驳。',example:'Granted, the proposal is attractive; nevertheless, its assumptions remain uncertain.',translation:'诚然，这项提议很有吸引力；不过其假设仍不确定。',question:'选择语气最准确的让步表达。',options:['Granted, the idea has merit; nevertheless, the evidence is incomplete.','The idea yes but no evidence maybe.','Nevertheless granted because idea.'],answer:0,why:'Granted 承认优点，nevertheless 精确引出保留意见。'},
- },
  de:{
   A1:{title:'用 können 礼貌提出请求',explanation:'Können Sie…? 使用尊称 Sie，适合向陌生人或服务人员礼貌请求帮助。',example:'Können Sie mir bitte helfen?',translation:'您可以帮我吗？',question:'选择更礼貌的请求。',options:['Hilf mir.','Können Sie mir bitte helfen?','Du helfen.'],answer:1,why:'Können Sie…? 加 bitte 是常用的礼貌请求结构。'},
   A2:{title:'用完成时说明已经发生的事',explanation:'haben/sein + 第二分词是日常口语中讲述过去事件的常用结构。',example:'Ich habe die Informationen geprüft.',translation:'我已经核对了信息。',question:'选择正确的完成时。',options:['Ich habe die Informationen geprüft.','Ich bin die Informationen prüfen.','Ich habe prüfen die Informationen.'],answer:0,why:'prüfen 使用 haben，第二分词 geprüft 放在句末。'},
@@ -202,7 +255,8 @@ function makeLesson(language:'en'|'de',level:CourseLevel,s:Scenario,index:number
   {id:`${id}-word-3`,fr:connector,pos:language==='en'?'language pattern':'Sprachmuster',zh:`${level} 级的组织与衔接表达。`},
  ];
  const readingTask=level==='A1'?undefined:{prompt:`这段对话如何体现 ${level} 级“${design.goal}”的能力？请找出一处组织信息或表达立场的语言证据。`,answer:`核心证据是“${response}”。它不仅回应事实，还按 ${level} 的要求加入了顺序、理由、让步、假设或立场限定。`};
- return {id,language,learnerSpeaker:you,topic:s.topic,level,title:`${s.title} · ${design.title}`,fr:target,goal:`围绕“${s.title}”练习 ${level}：${design.goal}。`,minutes:design.minutes,dialogue:dialogue(language,level,target,targetZh,s.topic),words,grammar:grammarGuide[language][level],
+ const grammar=language==='en'?englishKnowledgeGuide[level][index%englishKnowledgeGuide[level].length]:grammarGuide.de[level];
+ return {id,language,learnerSpeaker:you,topic:s.topic,level,title:`${s.title} · ${design.title}`,fr:target,goal:`围绕“${s.title}”练习 ${level}：${design.goal}。`,minutes:design.minutes,dialogue:dialogue(language,level,target,targetZh,s.topic),words,grammar,
   quiz:{question:language==='en'?'What is the learner mainly trying to achieve?':'Was möchte die lernende Person vor allem erreichen?',options:[language==='en'?'Clarify the situation and agree on an appropriate next step.':'Die Situation klären und einen passenden nächsten Schritt vereinbaren.',language==='en'?'Avoid giving any information.':'Keine Informationen geben.',language==='en'?'End the conversation without a decision.':'Das Gespräch ohne Entscheidung beenden.'],answer:0,why:`学习者围绕“${s.title}”补充信息并推动形成下一步。`},
   readingTask,writing:{prompt:`围绕“${s.title}”完成 ${level} 写作：${design.writing}`,example:writingExample(language,level,target),...(level==='A1'?{}:{checklist:design.checklist})},
  };
