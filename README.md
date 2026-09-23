@@ -1,16 +1,18 @@
 # Parcours · 多语言学习之路
 
-A responsive Chinese learning application for French, English and German.
+A responsive Chinese learning application for French, English, German and Japanese.
 
 ## Included
 
-- Three switchable language modules with a persistent Chinese bilingual mode.
+- Four switchable language modules with a persistent Chinese bilingual mode.
 - French, English and German each provide seven selectable routes—A1, A2, A2+, B1, B2, C1 and C2—with 50 lessons per route.
-- 1,050 lessons and 3,150 vocabulary cards across eight practical themes.
+- Japanese provides four routes from zero foundation to JLPT N4, N3, N2 and N1, with 50 lessons per route.
+- 1,250 lessons and 3,750 vocabulary cards across eight practical themes.
 - German route labels reference Goethe-Zertifikat; English route labels reference Cambridge English Qualifications. A2+ is an internal transition route rather than an official exam level.
 - English knowledge progression also draws on the staged teaching approach associated with New Concept English: foundations, everyday grammar, connected narrative, close reading, argument, register and stylistic precision. All passages, examples and exercises in this app are original.
+- Japanese route labels reference the official JLPT competence descriptions. The app adds speaking and writing practice beyond the JLPT test sections; it is not an official preparation course or certification.
 - Five-step lessons: listening, reading, vocabulary/grammar, guided speaking, writing.
-- Browser speech synthesis selects French, English or German voices automatically.
+- Browser speech synthesis selects French, English, German or Japanese voices automatically.
 - Microphone recording and local playback; recordings are not uploaded.
 - Guided role-play scripts and transparent writing self-checks, not AI grading.
 - A short listening/reading diagnostic plus optional speaking/writing self-assessment.

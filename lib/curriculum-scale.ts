@@ -1,5 +1,6 @@
 import type {Lesson} from './curriculum';
 import type {LearningLevel} from './levels';
+type FrenchLevel=Exclude<LearningLevel,'N4'|'N3'|'N2'|'N1'>;
 
 type Scenario={
   key:string;topic:string;titleZh:string;titleFr:string;placeFr:string;placeZh:string;
@@ -57,10 +58,10 @@ const scenarios:Scenario[]=[
   {key:'information',topic:'opinions',titleZh:'核查一条网上信息',titleFr:'Vérifier une information en ligne',placeFr:'sur internet',placeZh:'网络上',partner:'Ami',requestFr:'vérifier une information avant de la partager',requestZh:'转发前核实信息',detailFr:'retrouver la source, la date et le contexte',detailZh:'找到来源、日期和语境',issueFr:'un message convaincant peut omettre des éléments importants',issueZh:'有说服力的信息也可能遗漏关键内容',solutionFr:'croiser les sources et distinguer fait, interprétation et incertitude',solutionZh:'交叉核对来源并区分事实、解释与不确定性',words:[['une source','n. f.','来源'],['croiser','v.','交叉核对'],['une incertitude','n. f.','不确定性']]},
 ];
 
-const levelMinutes:Record<LearningLevel,number>={A1:12,A2:15,'A2+':18,B1:20,B2:24,C1:30,C2:36};
-const suffix:Record<LearningLevel,string>={A1:'说清基本信息',A2:'补充实用细节','A2+':'连接原因与步骤',B1:'解释选择和经历',B2:'比较方案与限制',C1:'分析条件与立场',C2:'辨析语气与论证'};
+const levelMinutes:Record<FrenchLevel,number>={A1:12,A2:15,'A2+':18,B1:20,B2:24,C1:30,C2:36};
+const suffix:Record<FrenchLevel,string>={A1:'说清基本信息',A2:'补充实用细节','A2+':'连接原因与步骤',B1:'解释选择和经历',B2:'比较方案与限制',C1:'分析条件与立场',C2:'辨析语气与论证'};
 
-function dialogue(level:LearningLevel,s:Scenario):Lesson['dialogue']{
+function dialogue(level:FrenchLevel,s:Scenario):Lesson['dialogue']{
   if(level==='A1')return [
     {speaker:s.partner,fr:'Bonjour. Je peux vous aider ?',zh:'您好。需要帮助吗？'},
     {speaker:'Vous',fr:`Oui, je voudrais ${s.requestFr}, s’il vous plaît.`,zh:`好的，我想${s.requestZh}。`},
@@ -111,7 +112,7 @@ function dialogue(level:LearningLevel,s:Scenario):Lesson['dialogue']{
   ];
 }
 
-function writing(level:LearningLevel,s:Scenario):Lesson['writing']{
+function writing(level:FrenchLevel,s:Scenario):Lesson['writing']{
   if(level==='A1')return {prompt:`用 20–40 词写一条消息：说明你在${s.placeZh}想做什么，并提出一个简单问题。`,example:`Bonjour. Je voudrais ${s.requestFr}. Je suis ${s.placeFr}. Mon objectif est ${s.detailFr}. Pouvez-vous m’aider et parler lentement, s’il vous plaît ? Merci beaucoup pour votre réponse.`};
   if(level==='A2')return {prompt:`用 40–80 词说明你想${s.requestZh}，补充具体需要并询问下一步。`,example:`Bonjour, je vous écris parce que je voudrais ${s.requestFr}. Je souhaite surtout ${s.detailFr}. Je sais que ${s.issueFr}, alors je voudrais connaître les possibilités. Est-ce que je peux ${s.solutionFr} ? Pouvez-vous m’expliquer la première étape et les documents nécessaires ? Je vous remercie pour votre aide et j’attends votre réponse.`,checklist:['我说明了具体需要和限制。','我提出了一个清楚、可以回答的问题。']};
   if(level==='A2+')return {prompt:`写 40–80 词：先说明情境，再用连接词解释困难、计划和下一步。`,example:`Bonjour, je voudrais ${s.requestFr}. D’abord, mon objectif est ${s.detailFr}. Cependant, je dois aussi tenir compte du fait que ${s.issueFr}. C’est pourquoi je préfère ${s.solutionFr}. Ensuite, je pourrai vérifier les informations et confirmer mon choix. Pourriez-vous me dire comment commencer et quand je recevrai une réponse ? Merci d’avance pour vos conseils.`,checklist:['我用连接词清楚排列了步骤。','我解释了选择这一方案的原因。']};
@@ -121,8 +122,8 @@ function writing(level:LearningLevel,s:Scenario):Lesson['writing']{
   return {prompt:`写 240–320 词的批判性综合：分析措辞、隐含前提和证据边界，并给出不扩大承诺的重述。`,example:`Le passage consacré à la nécessité de ${s.requestFr} semble d’abord présenter une démarche pratique. Il associe cette démarche à une finalité valorisée, celle de ${s.detailFr}. Or le lien entre une intention souhaitable et l’efficacité de la méthode n’est pas démontré par leur simple proximité dans le texte. La formulation invite le lecteur à accepter la seconde au nom de la première.\nCette construction repose sur un présupposé : dès lors que l’objectif est jugé légitime, les moyens proposés seraient adaptés. L’objection selon laquelle ${s.issueFr} ne suffit pas, à elle seule, à prouver l’inverse. Elle révèle néanmoins une condition que l’argument initial laissait hors champ. Il faut donc résister à deux conclusions symétriques : considérer le projet comme nécessaire parce que son but est séduisant, ou le déclarer inutile dès qu’une limite apparaît.\nUne reformulation plus rigoureuse proposerait de ${s.solutionFr}, sans annoncer d’avance le résultat. Elle préciserait la période observée, les personnes chargées de l’évaluation et les conséquences susceptibles d’être révisées. Elle distinguerait aussi une amélioration globale d’une distribution équitable des effets. Ce qui paraît positif en moyenne peut imposer une charge disproportionnée à un groupe particulier.\nLe choix des mots mérite lui aussi d’être contrôlé. Des verbes tels que « garantir », « résoudre » ou « permettre » n’expriment pas le même degré de certitude. S’il ne s’agit encore que d’une hypothèse, il serait préférable d’écrire que la mesure « pourrait contribuer à » l’objectif, sous des conditions nommées.\nUne synthèse destinée au public pourrait ainsi présenter les faits établis, les interprétations en présence et les informations manquantes dans trois mouvements distincts. Elle conserverait la raison d’agir sans faire de cette urgence une preuve. Elle indiquerait enfin quel nouvel élément justifierait de poursuivre, de modifier ou d’abandonner le dispositif. La nuance ne consiste pas à éviter toute conclusion ; elle consiste à donner à la conclusion une portée proportionnée aux éléments réellement disponibles.`,checklist:['我区分了事实、解释和隐含前提。','我分析了动词力度，没有虚构作者意图。','我的重述保留了核心问题，却没有提高确定性。']};
 }
 
-function grammar(level:LearningLevel,index:number):Lesson['grammar']{
-  const variants:Record<LearningLevel,Lesson['grammar'][]>= {
+function grammar(level:FrenchLevel,index:number):Lesson['grammar']{
+  const variants:Record<FrenchLevel,Lesson['grammar'][]>= {
     A1:[
       {title:'Je voudrais + 不定式',explanation:'je voudrais 可以礼貌地表达愿望，后面直接接动词原形。',example:'Je voudrais envoyer un colis.',translation:'我想寄一个包裹。',question:'补全：Je voudrais ___ une information.',options:['demande','demander','demandé'],answer:1,why:'voudrais 后接动词不定式 demander。'},
       {title:'Pouvez-vous… ?',explanation:'pouvez-vous + 动词原形可以礼貌地请求对方做某事。',example:'Pouvez-vous parler lentement ?',translation:'您可以说慢一点吗？',question:'补全：Pouvez-vous ___ ?',options:['répétez','répéter','répété'],answer:1,why:'pouvez-vous 后接不定式 répéter。'},
@@ -137,7 +138,7 @@ function grammar(level:LearningLevel,index:number):Lesson['grammar']{
   return variants[level][index%variants[level].length];
 }
 
-function build(level:LearningLevel,s:Scenario,index:number):Lesson{
+function build(level:FrenchLevel,s:Scenario,index:number):Lesson{
   const id=`scale-${level.toLowerCase().replace('+','p')}-${String(index+1).padStart(2,'0')}`;
   return {
     id,topic:s.topic,level,title:`${s.titleZh}：${suffix[level]}`,fr:s.titleFr,
@@ -149,10 +150,10 @@ function build(level:LearningLevel,s:Scenario,index:number):Lesson{
   };
 }
 
-const existingCounts:Record<LearningLevel,number>={A1:8,A2:7,'A2+':8,B1:9,B2:8,C1:8,C2:8};
+const existingCounts:Record<FrenchLevel,number>={A1:8,A2:7,'A2+':8,B1:9,B2:8,C1:8,C2:8};
 const topicOrder=['daily','food','travel','home','work','stories','social','opinions'];
 const balancedScenarios=Array.from({length:6},(_,round)=>topicOrder.map(topic=>scenarios.filter(s=>s.topic===topic)[round])).flat().filter((scenario):scenario is Scenario=>Boolean(scenario));
-export const scaledLessons:Lesson[]=(Object.keys(existingCounts) as LearningLevel[]).flatMap(level=>
+export const scaledLessons:Lesson[]=(Object.keys(existingCounts) as FrenchLevel[]).flatMap(level=>
   balancedScenarios.slice(0,50-existingCounts[level]).map((scenario,index)=>build(level,scenario,index)),
 );
 export const scaledScenarioCount=balancedScenarios.length;

@@ -20,17 +20,21 @@ function readModule(filename){
   return module.exports;
 }
 export const {lessons,topics,allWords}=readModule(path.join(root,'lib/curriculum.ts'));
-export const {levelGuide,countFrenchWords}=readModule(path.join(root,'lib/levels.ts'));
+export const {levelGuide,countLearningUnits}=readModule(path.join(root,'lib/levels.ts'));
 const expected={A1:50,A2:50,'A2+':50,B1:50,B2:50,C1:50,C2:50};
-assert.equal(lessons.length,1050);
-assert.equal(new Set(lessons.map(l=>l.id)).size,1050,'Duplicate lesson IDs');
-assert.equal(allWords.length,3150);
-assert.equal(new Set(allWords.map(w=>w.id)).size,3150,'Duplicate vocabulary IDs');
+const japaneseExpected={N4:50,N3:50,N2:50,N1:50};
+assert.equal(lessons.length,1250);
+assert.equal(new Set(lessons.map(l=>l.id)).size,1250,'Duplicate lesson IDs');
+assert.equal(allWords.length,3750);
+assert.equal(new Set(allWords.map(w=>w.id)).size,3750,'Duplicate vocabulary IDs');
 for(const language of ['fr','en','de'])for(const [level,count] of Object.entries(expected))assert.equal(lessons.filter(l=>l.language===language&&l.level===level).length,count,language+' '+level);
+for(const [level,count] of Object.entries(japaneseExpected))assert.equal(lessons.filter(l=>l.language==='ja'&&l.level===level).length,count,'ja '+level);
 for(const topic of topics){const topicCount=lessons.filter(l=>l.topic===topic.id).length;assert.ok(topicCount>=28,topic.id+': '+topicCount);}
 for(let i=1;i<=56;i++)assert.ok(lessons.some(l=>l.id===`lesson-${String(i).padStart(2,'0')}`));
 for(const language of ['fr','en','de'])for(const level of Object.keys(expected))assert.equal(new Set(lessons.filter(l=>l.language===language&&l.level===level).map(l=>l.title)).size,50,language+' '+level+' duplicate titles');
+for(const level of Object.keys(japaneseExpected))assert.equal(new Set(lessons.filter(l=>l.language==='ja'&&l.level===level).map(l=>l.title)).size,50,'ja '+level+' duplicate titles');
 for(const level of Object.keys(expected))assert.ok(new Set(lessons.filter(l=>l.language==='en'&&l.level===level).map(l=>l.grammar.title)).size>=6,'English '+level+' needs a varied knowledge sequence');
+for(const level of Object.keys(japaneseExpected))assert.ok(new Set(lessons.filter(l=>l.language==='ja'&&l.level===level).map(l=>l.grammar.title)).size>=6,'Japanese '+level+' needs a varied knowledge sequence');
 const errors=[];
 for(const l of lessons){
   assert.ok(topics.some(t=>t.id===l.topic),l.id);
@@ -43,11 +47,11 @@ for(const l of lessons){
   assert.equal(l.dialogue.length,6,l.id);
   const learner=l.learnerSpeaker??'Vous';
   l.dialogue.forEach((line,i)=>{assert.ok(line.fr&&line.zh,l.id);assert.equal(line.speaker===learner,i%2===1,l.id);});
-  const guide=levelGuide(l.level),count=countFrenchWords(l.writing.example);
+  const guide=levelGuide(l.level),count=countLearningUnits(l.writing.example,l.language);
   if(count<guide.minWords||count>guide.maxWords)errors.push(`${l.id} (${l.level}): reference has ${count} words, expected ${guide.minWords}–${guide.maxWords}`);
   assert.ok(count>=guide.completionWords,l.id);
   assert.ok(l.writing.example.length<=6000,l.id);
   if(l.level!=='A1'){assert.ok(l.readingTask?.prompt&&l.readingTask?.answer,l.id);assert.ok(l.writing.checklist.length>=2,l.id);}
 }
 assert.deepEqual(errors,[],'Reference answers should model their suggested length');
-console.log('PASS: 1050 unique lessons across French, English and German, 3150 vocabulary cards, bilingual dialogue pairs, answer indices and reference writing lengths.');
+console.log('PASS: 1250 unique lessons across French, English, German and Japanese, 3750 vocabulary cards, bilingual dialogue pairs, answer indices and reference writing lengths.');

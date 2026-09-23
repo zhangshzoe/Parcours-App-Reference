@@ -58,8 +58,9 @@ const scenarios:Scenario[]=[
 type CourseLevel='A1'|'A2'|'A2+'|'B1'|'B2'|'C1'|'C2';
 const courseLevels:CourseLevel[]=['A1','A2','A2+','B1','B2','C1','C2'];
 const levelSlug=(level:CourseLevel)=>level==='A2+'?'a2plus':level.toLowerCase();
-const partner=(language:LearningLanguage,topic:string)=>language==='en'?(topic==='work'?'Colleague':'Conversation partner'):(topic==='work'?'Kollegin':'Gesprächspartnerin');
-const learner=(language:LearningLanguage)=>language==='en'?'You':'Du';
+type EuropeanModuleLanguage='en'|'de';
+const partner=(language:EuropeanModuleLanguage,topic:string)=>language==='en'?(topic==='work'?'Colleague':'Conversation partner'):(topic==='work'?'Kollegin':'Gesprächspartnerin');
+const learner=(language:EuropeanModuleLanguage)=>language==='en'?'You':'Du';
 
 const levelDesign:Record<CourseLevel,{title:string;goal:string;minutes:number;writing:string;checklist:string[]}>= {
  A1:{title:'基础沟通',goal:'说清基本信息和即时需要',minutes:12,writing:'说明基本信息，并加入一句礼貌请求。',checklist:[]},
@@ -90,7 +91,7 @@ const germanTargets:Record<CourseLevel,(base:string)=>string>={
  C2:base=>`${base} Diese erste Formulierung ist nützlich; eine präzisere Antwort sollte jedoch konkurrierende Deutungen berücksichtigen, den Ton an das Publikum anpassen und die Schlussfolgerung angemessen einschränken.`,
 };
 
-const learnerReplies:Record<LearningLanguage,Record<CourseLevel,string>>={
+const learnerReplies:Record<'fr'|EuropeanModuleLanguage,Record<CourseLevel,string>>={
  fr:{A1:'',A2:'','A2+':'',B1:'',B2:'',C1:'',C2:''},
  en:{
   A1:'Yes, please. Could you explain the next step?',
@@ -115,7 +116,7 @@ const learnerReplyZh:Record<CourseLevel,string>={
  A1:'需要，请说明一下下一步。',A2:'我已经核对了基本信息，但还需要确认几个细节。','A2+':'我们先确认事实，然后再选择下一步。',B1:'我认为这个方案很实际，因为它节省时间，不过我也愿意考虑其他办法。',B2:'如果更仔细地比较利弊，我们就能找到兼顾双方的方案。',C1:'最重要的是区分眼前的问题和它的长期影响。',C2:'诚然，最直接的方案很有吸引力；不过，它背后的假设仍值得仔细审视。',
 };
 
-const partnerQuestions:Record<LearningLanguage,Record<CourseLevel,string>>={
+const partnerQuestions:Record<'fr'|EuropeanModuleLanguage,Record<CourseLevel,string>>={
  fr:{A1:'',A2:'','A2+':'',B1:'',B2:'',C1:'',C2:''},
  en:{A1:'Of course. Do you need anything else?',A2:'What have you already done?', 'A2+':'How would you like to organize the next steps?',B1:'Why do you think this option would work?',B2:'What would you say to someone who disagrees?',C1:'Which assumptions should we examine before deciding?',C2:'How would you reformulate your position for a skeptical audience?'},
  de:{A1:'Natürlich. Brauchen Sie noch etwas?',A2:'Was haben Sie bereits erledigt?', 'A2+':'Wie möchten Sie die nächsten Schritte ordnen?',B1:'Warum halten Sie diese Möglichkeit für sinnvoll?',B2:'Wie würden Sie auf einen Einwand reagieren?',C1:'Welche Annahmen sollten wir vor der Entscheidung prüfen?',C2:'Wie würden Sie Ihre Position für ein skeptisches Publikum neu formulieren?'},
@@ -187,7 +188,7 @@ const englishKnowledgeGuide:Record<CourseLevel,Lesson['grammar'][]>= {
  ],
 };
 
-const grammarGuide:Record<Exclude<LearningLanguage,'en'>,Record<CourseLevel,Lesson['grammar']>>={
+const grammarGuide:Record<'fr'|'de',Record<CourseLevel,Lesson['grammar']>>={
  fr:{} as Record<CourseLevel,Lesson['grammar']>,
  de:{
   A1:{title:'用 können 礼貌提出请求',explanation:'Können Sie…? 使用尊称 Sie，适合向陌生人或服务人员礼貌请求帮助。',example:'Können Sie mir bitte helfen?',translation:'您可以帮我吗？',question:'选择更礼貌的请求。',options:['Hilf mir.','Können Sie mir bitte helfen?','Du helfen.'],answer:1,why:'Können Sie…? 加 bitte 是常用的礼貌请求结构。'},
@@ -200,7 +201,7 @@ const grammarGuide:Record<Exclude<LearningLanguage,'en'>,Record<CourseLevel,Less
  },
 };
 
-function dialogue(language:LearningLanguage,level:CourseLevel,target:string,targetZh:string,topic:string){
+function dialogue(language:EuropeanModuleLanguage,level:CourseLevel,target:string,targetZh:string,topic:string){
  const p=partner(language,topic),you=learner(language),question=partnerQuestions[language][level],reply=learnerReplies[language][level];
  if(language==='en')return [
   {speaker:p,fr:level==='A1'?'Hello. How can I help you?':'Let us look at the situation carefully. What would you like to achieve?',zh:level==='A1'?'您好，我可以怎么帮助您？':'我们仔细看看这个情况。您希望达成什么目标？'},
@@ -220,8 +221,8 @@ function dialogue(language:LearningLanguage,level:CourseLevel,target:string,targ
  ];
 }
 
-function writingExample(language:LearningLanguage,level:CourseLevel,target:string){
- const examples:Record<LearningLanguage,Record<CourseLevel,(value:string)=>string>>={
+function writingExample(language:EuropeanModuleLanguage,level:CourseLevel,target:string){
+ const examples:Record<'fr'|EuropeanModuleLanguage,Record<CourseLevel,(value:string)=>string>>={
   fr:{} as Record<CourseLevel,(value:string)=>string>,
   en:{
    A1:v=>`Hello. ${v} Could you help me with the next step, please? I would also like to know the time and place. Thank you for your help.`,

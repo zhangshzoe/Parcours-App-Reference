@@ -2,7 +2,7 @@ import {getChatGPTUser} from '@/app/chatgpt-auth';
 import {getDatabase} from '@/db';
 import {findLesson,allWords} from '@/lib/curriculum';
 import {emptyState} from '@/lib/study-state';
-import {levelGuide,countFrenchWords} from '@/lib/levels';
+import {levelGuide,countLearningUnits} from '@/lib/levels';
 import {z} from 'zod';
 export const dynamic='force-dynamic';
 const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'private, no-store'}});
@@ -25,7 +25,7 @@ if(action==='complete'){
  const input=z.object({lessonId:z.string(),answers:z.tuple([z.number().int().min(0).max(2),z.number().int().min(0).max(2)]),writing:z.string().min(15).max(6000),seconds:z.number().int().min(0).max(7200),attemptId:z.string().uuid()}).parse(body);
  const lesson=findLesson(input.lessonId);if(!lesson)return reply({error:'课程不存在。'},404);
  const minimum=levelGuide(lesson.level).completionWords;
- if(countFrenchWords(input.writing)<minimum)return reply({error:`本课请至少写 ${minimum} 个法语词，再完成写作任务。`},400);
+ if(countLearningUnits(input.writing,lesson.language)<minimum)return reply({error:`本课请至少写 ${minimum} ${lesson.language==='ja'?'个日语字':'个目标语言词'}，再完成写作任务。`},400);
  const score=Number(input.answers[0]===lesson.quiz.answer)+Number(input.answers[1]===lesson.grammar.answer);
  await db.batch([
  db.prepare('INSERT INTO lesson_progress (user_id, lesson_id, score, completed_at) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, lesson_id) DO UPDATE SET score = MAX(score, excluded.score)').bind(uid,lesson.id,score,now),
@@ -43,4 +43,3 @@ if(action==='report'){const input=z.object({lessonId:z.string(),body:z.string().
 return reply({error:'未知操作。'},400);
 }catch(error){if(error instanceof z.ZodError||error instanceof SyntaxError)return reply({error:'提交内容不完整或格式不正确，请检查后重试。'},400);console.error('Study save failed',error);return reply({error:'暂时无法保存，内容仍保留在当前页面，请重试。'},503)}
 }
-
