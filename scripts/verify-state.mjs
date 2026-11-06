@@ -9,8 +9,10 @@ const modules=['index.js',...moduleFiles.filter(f=>f.endsWith('.js')&&f!=='index
 const mf=new Miniflare({modules,modulesRoot:path.resolve('dist/server'),compatibilityDate:'2026-05-15',compatibilityFlags:['nodejs_compat'],d1Databases:{DB:'parcours-qa'},cf:false});
 try {
 const database=await mf.getD1Database('DB');
-const migration=await readFile('drizzle/0000_fresh_natasha_romanoff.sql','utf8');
-for(const statement of migration.split('--> statement-breakpoint').map(s=>s.trim()).filter(Boolean))await database.prepare(statement).run();
+for(const file of (await readdir('drizzle')).filter(f=>f.endsWith('.sql')).sort()){
+ const migration=await readFile('drizzle/'+file,'utf8');
+ await database.batch(migration.split('--> statement-breakpoint').map(s=>s.trim()).filter(Boolean).map(s=>database.prepare(s)));
+}
 const run=crypto.randomUUID();
 const identity=id=>({'oai-authenticated-user-id':'qa-'+run+'-'+id,'oai-authenticated-user-email':'qa-'+id+'@example.test'});
 async function request(id,body,extra={}){const r=await mf.dispatchFetch(origin+'/api/state',{method:body?'POST':'GET',headers:{...(id?identity(id):{}),...(body?{'Content-Type':'application/json'}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})});return {status:r.status,data:await r.json()};}

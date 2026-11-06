@@ -1,0 +1,19 @@
+.english-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:16px}
+.english-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.english-questions{display:grid;gap:16px;margin:22px 0}
+.english-questions fieldset{border:1px solid #d9e0ee;border-radius:14px;padding:16px}
+.english-questions legend{font-weight:700;padding:0 6px}
+.english-option{display:flex;align-items:center;gap:10px;min-height:44px}
+.english-option input{width:18px;height:18px}
+.english-help{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.english-help button{min-height:44px}
+.english-transcript{background:#f6f8fc;border-radius:12px;padding:16px;margin:14px 0}
+.english-transcript p{margin:0 0 10px}
+.english-result{border-left:4px solid #315dd2;padding:12px 16px;background:#f6f8fc;border-radius:0 12px 12px 0;margin:14px 0}
+.english-review-card{border:1px solid #d9e0ee;border-radius:12px;padding:16px;margin:12px 0}
+.english-turn{border-top:1px solid #d9e0ee;padding-top:16px;margin-top:16px}
+.english-turn blockquote{border-left:3px solid #aab9d6;padding-left:14px;margin:10px 0}
+.english-mini{max-width:880px;margin:0 auto}
+.english-control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.english-control select{border:1px solid #bcc8df;border-radius:8px;min-height:44px;padding:0 10px;background:white}
+@media(max-width:600px){.english-mini{padding:0 2px}.english-help button,.english-control button{flex:1 1 130px}.english-grid{grid-template-columns:1fr}}

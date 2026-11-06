@@ -1,0 +1,1 @@
+ALTER TABLE `english_review_events` ADD `review_mode` text;
