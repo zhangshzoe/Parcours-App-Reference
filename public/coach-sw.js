@@ -1,5 +1,5 @@
 /* Only these public, versioned support files may enter this cache. */
-const CACHE = 'parcours-coach-public-v1';
+const CACHE = 'parcours-coach-public-v2';
 const PREFIX = 'parcours-coach-public-';
 const OFFLINE = '/coach/offline.html';
 const PUBLIC_FILES = new Map([
@@ -21,9 +21,13 @@ self.addEventListener('install', event => {
   event.waitUntil((async () => {
     // Fetch and validate the entire set before modifying the cache.
     const files = await Promise.all([...PUBLIC_FILES].map(async ([path, type]) => {
-      const response = await fetch(new Request(new URL(path, self.location.origin), {
+      const read = url => fetch(new Request(new URL(url, self.location.origin), {
         credentials: 'omit', redirect: 'error', cache: 'reload',
       }));
+      // Hosted assets canonicalize .html URLs; local previews may serve exact files.
+      // Only a missing canonical public page permits the exact-file fallback.
+      let response = await read(path === OFFLINE ? '/coach/offline' : path);
+      if (path === OFFLINE && response.status === 404) response = await read(OFFLINE);
       if (!isPublic(response, type)) throw new Error('Unsafe or missing public asset');
       return [path, response];
     }));
